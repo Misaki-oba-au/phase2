@@ -1,0 +1,17 @@
+{
+  "name": "AI Native Notepad",
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ritwickdey.LiveServer",
+        "esbenp.prettier-vscode"
+      ]
+    }
+  },
+  "forwardPorts": [5500],
+  "portsAttributes": {
+    "5500": { "label": "Notepad app", "onAutoForward": "openBrowser" }
+  },
+  "postCreateCommand": "echo 'Codespace ready. Open index.html and use Live Preview / Live Server to run the app.'"
+}

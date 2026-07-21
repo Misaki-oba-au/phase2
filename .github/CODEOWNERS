@@ -1,0 +1,9 @@
+# Every pull request requires a review from the engineers/instructors below.
+# Combined with a Branch Protection rule ("Require review from Code Owners"),
+# this enforces the "engineer reviews before merge" step from the Practical deck.
+#
+# Replace the placeholder with your real org team or instructor GitHub IDs.
+
+*   @YOUR-ORG/engineers
+# Or, for individual instructors:
+# *   @instructor-github-id  @engineer-github-id

@@ -1,0 +1,10 @@
+# OS / editor noise only.
+#
+# NOTE FOR INSTRUCTORS: Do NOT add ".env" to this file.
+# Adding ".env" to .gitignore is the student's hands-on exercise in the
+# Practical (実践編) session. Leaving it out here keeps that lesson intact.
+
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

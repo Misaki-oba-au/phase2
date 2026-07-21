@@ -1,0 +1,101 @@
+:root {
+  --bg: #f5f6f8;
+  --card: #ffffff;
+  --text: #1f2430;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --accent: #2563eb;      /* Basics exercise: change the "Add" button to red */
+  --accent-hover: #1d4ed8;
+  --danger: #ef4444;
+  --radius: 10px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.app {
+  max-width: 640px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.app__header { text-align: center; margin-bottom: 24px; }
+.app__header h1 { margin: 0 0 4px; font-size: 1.8rem; }
+.app__subtitle { margin: 0; color: var(--muted); font-size: 0.95rem; }
+
+.composer {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+  margin-bottom: 20px;
+}
+
+.composer__input {
+  flex: 1;
+  resize: vertical;
+  min-height: 48px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font: inherit;
+  color: inherit;
+}
+
+.btn {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn--add { background: var(--accent); color: #fff; }
+.btn--add:hover { background: var(--accent-hover); }
+
+.note-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+
+.note {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+}
+
+.note__text { flex: 1; white-space: pre-wrap; word-break: break-word; }
+
+.note__actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+.note__btn {
+  border: 1px solid var(--border);
+  background: transparent;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: var(--muted);
+}
+.note__btn:hover { color: var(--text); border-color: var(--muted); }
+.note__btn--delete:hover { color: var(--danger); border-color: var(--danger); }
+
+.empty {
+  text-align: center;
+  color: var(--muted);
+  padding: 32px 0;
+  font-size: 0.95rem;
+}
