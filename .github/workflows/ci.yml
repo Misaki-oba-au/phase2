@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Fail if a .env file was committed
         run: |
@@ -38,7 +38,7 @@ jobs:
   html-check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Basic sanity check
         run: |
           test -f index.html && echo "index.html present"
