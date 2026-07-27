@@ -4,8 +4,8 @@
   --text: #1f2430;
   --muted: #6b7280;
   --border: #e5e7eb;
-  --accent: #2563eb;      /* Basics exercise: change the "Add" button to red */
-  --accent-hover: #1d4ed8;
+  --accent: #dc2626;      /* Basics exercise: change the "Add" button to red */
+  --accent-hover: #b91c1c;
   --danger: #ef4444;
   --radius: 10px;
 }
