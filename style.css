@@ -33,12 +33,84 @@ body {
 .composer {
   display: flex;
   gap: 10px;
-  align-items: stretch;
+  align-items: flex-end;
+  flex-wrap: wrap;
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 12px;
   margin-bottom: 20px;
+}
+
+.composer__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 180px;
+}
+
+.composer__field--date {
+  max-width: 240px;
+}
+
+.composer__field label {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.composer__text-input {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font: inherit;
+  color: inherit;
+  background: #fff;
+}
+
+.note__meta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: baseline;
+}
+
+.note__title {
+  font-weight: 700;
+}
+
+.note__date {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.composer__date-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.btn--small {
+  padding: 8px 12px;
+  font-size: 0.85rem;
+}
+
+.calendar__note-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2px 0;
+  padding: 4px 6px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.calendar__note-label:hover {
+  background: #1d4ed8;
 }
 
 .composer__input {
@@ -50,6 +122,116 @@ body {
   padding: 10px 12px;
   font: inherit;
   color: inherit;
+}
+
+.composer__date {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font: inherit;
+  color: inherit;
+  background: #fff;
+}
+
+.btn--ghost {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+}
+
+.btn--ghost:hover {
+  background: rgba(37, 99, 235, 0.08);
+}
+
+.calendar {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  margin-bottom: 20px;
+}
+
+.calendar__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.calendar__title {
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.calendar__month {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.calendar__weekdays,
+.calendar__grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.calendar__weekdays div {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.calendar__day {
+  min-height: 96px;
+  padding: 10px;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  position: relative;
+  cursor: pointer;
+}
+
+.calendar__day--empty {
+  background: transparent;
+  border: none;
+  cursor: default;
+}
+
+.calendar__day span {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.calendar__day--today {
+  border-color: var(--accent);
+  background: #eff6ff;
+}
+
+.calendar__day--has-notes {
+  background: #eef2ff;
+}
+
+.calendar__note-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2px 0;
+  padding: 4px 6px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  background: var(--accent);
+  color: #fff;
+}
+
+.calendar__note-list {
+  display: grid;
+  gap: 4px;
 }
 
 .btn {

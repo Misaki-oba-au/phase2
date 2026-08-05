@@ -13,9 +13,48 @@
       <p class="app__subtitle">A simple notepad app. Add, edit, and delete your notes.</p>
     </header>
 
+    <section class="calendar">
+      <div class="calendar__header">
+        <button id="prev-month" class="btn btn--ghost" aria-label="Previous month">◀</button>
+        <div>
+          <div class="calendar__title">Calendar</div>
+          <div id="calendar-month" class="calendar__month"></div>
+        </div>
+        <button id="next-month" class="btn btn--ghost" aria-label="Next month">▶</button>
+      </div>
+
+      <div class="calendar__weekdays">
+        <div>Sun</div>
+        <div>Mon</div>
+        <div>Tue</div>
+        <div>Wed</div>
+        <div>Thu</div>
+        <div>Fri</div>
+        <div>Sat</div>
+      </div>
+
+      <div id="calendar-grid" class="calendar__grid"></div>
+    </section>
+
     <section class="composer">
-      <textarea id="note-input" class="composer__input" placeholder="Write a note..."></textarea>
-      <!-- Basics exercise: ask AI to turn this "Add" button red -->
+      <div class="composer__field">
+        <label for="note-title">Title (optional)</label>
+        <input id="note-title" class="composer__text-input" placeholder="Title" />
+      </div>
+
+      <div class="composer__field">
+        <label for="note-input">Note</label>
+        <textarea id="note-input" class="composer__input" placeholder="Write a note..."></textarea>
+      </div>
+
+      <div class="composer__field composer__field--date">
+        <label for="note-date">Date</label>
+        <div class="composer__date-row">
+          <input id="note-date" type="date" class="composer__date" />
+          <button id="yesterday-btn" type="button" class="btn btn--ghost btn--small">Yesterday</button>
+        </div>
+      </div>
+
       <button id="add-btn" class="btn btn--add">Add</button>
     </section>
 
