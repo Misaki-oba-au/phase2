@@ -1,64 +1,90 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Notepad — AI Native Workforce Program</title>
+  <title>Cultural Events Calendar</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <main class="app">
     <header class="app__header">
-      <h1>📝 Notepad</h1>
-      <p class="app__subtitle">A simple notepad app. Add, edit, and delete your notes.</p>
+      <p class="eyebrow">Cultural Events Calendar</p>
+      <h1>各国のお客様を理解するための文化イベントカレンダー</h1>
+      <p class="app__subtitle">
+        祝日だけでなく、「なぜ重要なのか」「どのように祝うのか」「接客で気をつけること」を一目で確認できます。
+      </p>
     </header>
 
-    <section class="calendar">
-      <div class="calendar__header">
-        <button id="prev-month" class="btn btn--ghost" aria-label="Previous month">◀</button>
+    <section class="filters-card">
+      <div class="filters-card__header">
         <div>
-          <div class="calendar__title">Calendar</div>
-          <div id="calendar-month" class="calendar__month"></div>
+          <p class="eyebrow">Countries</p>
+          <h2>対象国を選択</h2>
         </div>
-        <button id="next-month" class="btn btn--ghost" aria-label="Next month">▶</button>
+        <p class="filters-card__hint">複数国を同時に選べます。</p>
       </div>
-
-      <div class="calendar__weekdays">
-        <div>Sun</div>
-        <div>Mon</div>
-        <div>Tue</div>
-        <div>Wed</div>
-        <div>Thu</div>
-        <div>Fri</div>
-        <div>Sat</div>
-      </div>
-
-      <div id="calendar-grid" class="calendar__grid"></div>
+      <div id="country-filters" class="chip-list"></div>
     </section>
 
-    <section class="composer">
-      <div class="composer__field">
-        <label for="note-title">Title (optional)</label>
-        <input id="note-title" class="composer__text-input" placeholder="Title" />
-      </div>
-
-      <div class="composer__field">
-        <label for="note-input">Note</label>
-        <textarea id="note-input" class="composer__input" placeholder="Write a note..."></textarea>
-      </div>
-
-      <div class="composer__field composer__field--date">
-        <label for="note-date">Date</label>
-        <div class="composer__date-row">
-          <input id="note-date" type="date" class="composer__date" />
-          <button id="yesterday-btn" type="button" class="btn btn--ghost btn--small">Yesterday</button>
+    <section class="content-grid content-grid--three">
+      <section class="calendar-card">
+        <div class="calendar-card__header">
+          <div>
+            <p class="eyebrow">Calendar</p>
+            <h2>文化イベント</h2>
+          </div>
+          <div class="calendar-nav">
+            <button id="prev-month" class="btn btn--ghost" type="button" aria-label="前の月">◀</button>
+            <div id="calendar-month" class="calendar__month"></div>
+            <button id="next-month" class="btn btn--ghost" type="button" aria-label="次の月">▶</button>
+          </div>
         </div>
-      </div>
 
-      <button id="add-btn" class="btn btn--add">Add</button>
+        <div class="calendar__weekdays">
+          <div>日</div>
+          <div>月</div>
+          <div>火</div>
+          <div>水</div>
+          <div>木</div>
+          <div>金</div>
+          <div>土</div>
+        </div>
+
+        <div id="calendar-grid" class="calendar__grid"></div>
+      </section>
+
+      <section class="today-panel">
+        <div class="today-panel__header">
+          <div>
+            <p class="eyebrow">Today's Events</p>
+            <h2 id="today-title"></h2>
+          </div>
+          <div id="today-summary" class="today-panel__summary"></div>
+        </div>
+        <div id="today-events" class="event-list"></div>
+        <div class="coming-up">
+          <div class="coming-up__header">
+            <div>
+              <p class="eyebrow">Coming Up</p>
+              <p class="coming-up__subtitle">選択中の国で、今日から30日以内の重要な予定</p>
+            </div>
+            <div id="coming-up-note" class="coming-up__note"></div>
+          </div>
+          <div id="coming-up-list" class="coming-up__list"></div>
+        </div>
+      </section>
+
+      <section class="detail-card">
+        <div class="detail-card__header">
+          <div>
+            <p class="eyebrow">Selected Day</p>
+            <h2 id="selected-date-title"></h2>
+          </div>
+        </div>
+        <div id="selected-day-events" class="detail-list"></div>
+      </section>
     </section>
-
-    <ul id="note-list" class="note-list"></ul>
   </main>
 
   <script src="script.js"></script>
