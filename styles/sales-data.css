@@ -1,0 +1,294 @@
+/* ============================================
+   Sales Data Module - Specific Styles
+   ============================================ */
+
+/* Upload Section */
+.upload-section {
+  padding: 2rem;
+  margin: 2rem;
+  background-color: #f9f9f9;
+}
+
+.upload-card {
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.upload-card h2 {
+  margin-top: 0;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.upload-hint {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0.5rem 0 1rem 0;
+}
+
+.upload-input-group {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+#excel-file-input {
+  flex: 1;
+  padding: 0.75rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+#excel-file-input:hover {
+  border-color: #5c6bc0;
+}
+
+#upload-btn {
+  white-space: nowrap;
+}
+
+/* Sales Summary Section */
+.sales-summary-section {
+  margin: 2rem;
+  padding: 0;
+}
+
+.sales-summary-section.hidden {
+  display: none;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.summary-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.summary-label {
+  margin: 0 0 0.5rem 0;
+  color: #666;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.summary-value {
+  margin: 0;
+  color: #5c6bc0;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+/* Ranking Section */
+.ranking-section {
+  margin: 2rem;
+  padding: 0;
+}
+
+.ranking-section.hidden {
+  display: none;
+}
+
+.ranking-section h2 {
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.ranking-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.ranking-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ranking-badge {
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-color: #5c6bc0;
+  color: white;
+  text-align: center;
+  line-height: 2rem;
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.ranking-badge.gold {
+  background-color: #ffd700;
+  color: #333;
+}
+
+.ranking-badge.silver {
+  background-color: #c0c0c0;
+  color: #333;
+}
+
+.ranking-badge.bronze {
+  background-color: #cd7f32;
+  color: white;
+}
+
+.ranking-store-name {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #333;
+  margin: 0.5rem 0 0 0;
+}
+
+.ranking-store-sales {
+  font-size: 1rem;
+  color: #5c6bc0;
+  font-weight: 600;
+  margin: 0;
+}
+
+.ranking-store-achievement {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+}
+
+/* Sales Table Section */
+.sales-table-section {
+  margin: 2rem;
+  padding: 0;
+}
+
+.sales-table-section.hidden {
+  display: none;
+}
+
+.sales-table-section h2 {
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.sales-content {
+  overflow-x: auto;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sales-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.sales-table thead {
+  background-color: #5c6bc0;
+  color: white;
+}
+
+.sales-table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #4c5aa0;
+}
+
+.sales-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+  color: #333;
+}
+
+.sales-table tbody tr:hover {
+  background-color: #f5f7fa;
+  transition: background-color 0.3s ease;
+}
+
+.sales-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Numeric columns */
+.numeric {
+  text-align: right;
+  font-weight: 600;
+  color: #5c6bc0;
+}
+
+.achievement-high {
+  color: #4caf50;
+}
+
+.achievement-medium {
+  color: #ff9800;
+}
+
+.achievement-low {
+  color: #f44336;
+}
+
+/* Error/Empty States */
+.error-message {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 1rem;
+  border-radius: 4px;
+  margin: 2rem;
+  border-left: 4px solid #c62828;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: #999;
+  font-size: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ranking-list {
+    grid-template-columns: 1fr;
+  }
+
+  .sales-table {
+    font-size: 0.85rem;
+  }
+
+  .sales-table th,
+  .sales-table td {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .upload-input-group {
+    flex-direction: column;
+  }
+
+  #excel-file-input,
+  #upload-btn {
+    width: 100%;
+  }
+}

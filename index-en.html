@@ -3,28 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Store Dashboard</title>
-  <link rel="stylesheet" href="styles/common.css" />
+  <title>Cultural Events Calendar</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="styles/sales-data.css" />
-  <!-- SheetJS for Excel parsing -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
-  <div class="dashboard">
-    <!-- Dashboard Navigation Tabs -->
-    <nav class="dashboard-nav">
-      <button class="tab-btn active" data-tab="culture-calendar">
-        🌍 Culture Calendar
-      </button>
-      <button class="tab-btn" data-tab="sales-data">
-        📊 Sales Data
-      </button>
-    </nav>
-
-    <!-- Tab 1: Culture Calendar -->
-    <div id="culture-calendar-tab" class="tab-content active">
-      <main class="app">
+  <main class="app">
     <header class="app__header">
       <p class="eyebrow">Cultural Events Calendar</p>
       <h1>Cultural Events Calendar to Understand Customers from Different Countries</h1>
@@ -102,61 +85,8 @@
         <div id="selected-day-events" class="detail-list"></div>
       </section>
     </section>
-      </main>
-    </div>
+  </main>
 
-    <!-- Tab 2: Sales Data -->
-    <div id="sales-data-tab" class="tab-content hidden">
-      <main class="app">
-        <header class="app__header">
-          <p class="eyebrow">Sales Data</p>
-          <h1>Sales Performance Dashboard</h1>
-          <p class="app__subtitle">Upload your sales data to view performance metrics and store rankings</p>
-        </header>
-
-        <section class="upload-section">
-          <div class="upload-card">
-            <h2>Upload Sales File</h2>
-            <p class="upload-hint">Supported formats: .xlsx, .xls</p>
-            <div class="upload-input-group">
-              <input type="file" id="excel-file-input" accept=".xlsx,.xls" />
-              <button id="upload-btn" class="btn btn-primary">Upload</button>
-            </div>
-          </div>
-        </section>
-
-        <!-- Sales Summary Section -->
-        <section id="sales-summary-section" class="sales-summary-section hidden">
-          <div class="summary-grid">
-            <div class="summary-card">
-              <p class="summary-label">Total Sales</p>
-              <p id="total-sales" class="summary-value">-</p>
-            </div>
-            <div class="summary-card">
-              <p class="summary-label">Target Achievement %</p>
-              <p id="target-achievement" class="summary-value">-</p>
-            </div>
-          </div>
-        </section>
-
-        <!-- Store Ranking Section -->
-        <section id="ranking-section" class="ranking-section hidden">
-          <h2>Store Ranking (by Sales)</h2>
-          <div id="ranking-list" class="ranking-list"></div>
-        </section>
-
-        <!-- Sales Table Section -->
-        <section id="sales-table-section" class="sales-table-section hidden">
-          <h2>Store-level Sales Table</h2>
-          <div id="sales-content" class="sales-content"></div>
-        </section>
-      </main>
-    </div>
-  </div>
-
-  <!-- Dashboard app initialization -->
-  <script type="module" src="js/app.js"></script>
-  <!-- Existing Culture Calendar script -->
-  <script src="script.js"></script>
+  <script src="script-en.js"></script>
 </body>
 </html>
