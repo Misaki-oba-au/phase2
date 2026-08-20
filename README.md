@@ -1,14 +1,14 @@
-# AI Native Workforce Program — Notepad Template (PILOT02)
+# AI Native Workforce Program — AI Task Manager (PILOT02)
 
-A tiny, beginner-friendly notepad app (plain HTML/CSS/JS, no build step) used as the
-shared base for the **PILOT02** sessions. It is the starting point for both the
-**Basics (Fundamentals)** session and the **Practical (実践編 / security)** session.
+A local-first task planning app (plain HTML/CSS/JS, no build step) used as the shared
+base for the **PILOT02** sessions. It manages priorities, deadlines, estimates,
+dependencies, delegated work, follow-ups, daily reports, and weekly views.
 
 ## What's inside
 
 | File | Purpose |
 |------|---------|
-| `index.html`, `style.css`, `script.js` | The notepad app (add / edit / delete notes) |
+| `index.html`, `style.css`, `script.js` | The task manager (plan, filter, update, and report) |
 | `.devcontainer/devcontainer.json` | Codespaces config so the app runs in the browser, no local install |
 | `.gitignore` | OS/editor noise only — **intentionally does not list `.env`** (see below) |
 | `.env.example` | Safe placeholder showing the secrets pattern (no real keys) |
@@ -20,7 +20,10 @@ shared base for the **PILOT02** sessions. It is the starting point for both the
 
 - **In Codespaces:** click **Code → Create codespace on main**, then open `index.html`
   with Live Preview / Live Server (port 5500 auto-forwards).
-- **Locally:** just open `index.html` in a browser.
+- **Locally:** run `python3 -m http.server 5500`, then open `http://localhost:5500`.
+
+Tasks are stored in the browser's local storage. Google Calendar sync is intentionally
+left as a later integration because it requires OAuth credentials and a backend.
 
 > 📦 **Extending the project?** As soon as you add a dependency, a runtime, or a new
 > port, the app code and the Codespaces config must stay in sync. See

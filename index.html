@@ -3,64 +3,63 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Notepad — AI Native Workforce Program</title>
+  <title>Task Manager / Daily Operations</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main class="app">
-    <header class="app__header">
-      <h1>📝 Notepad</h1>
-      <p class="app__subtitle">A simple notepad app. Add, edit, and delete your notes.</p>
-    </header>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand__mark">TM</span><div><strong>Task Manager</strong><small>AI-native operations</small></div></div>
+      <div class="sidebar__label">Workspace</div>
+      <nav class="views" aria-label="Task views">
+        <button class="view-link active" data-view="This Week"><span>◈</span>This Week</button>
+        <button class="view-link" data-view="Delegated / Waiting"><span>↗</span>Delegated / Waiting</button>
+        <button class="view-link" data-view="Next Week"><span>→</span>Next Week</button>
+        <button class="view-link" data-view="Done"><span>✓</span>Done archive</button>
+      </nav>
+      <div class="sidebar__label">Projects</div>
+      <ul id="project-list" class="side-list"></ul>
+      <form id="project-form" class="inline-form"><input id="project-name" placeholder="New project" aria-label="New project" /><button title="Add project">+</button></form>
+      <div class="sidebar__label">People</div>
+      <ul id="member-list" class="side-list"></ul>
+      <form id="member-form" class="inline-form"><input id="member-name" placeholder="Add collaborator" aria-label="Add collaborator" /><button title="Add collaborator">+</button></form>
+      <div class="sidebar__foot"><span class="status-dot"></span>Local workspace<br /><small>Changes saved in this browser</small></div>
+    </aside>
 
-    <section class="calendar">
-      <div class="calendar__header">
-        <button id="prev-month" class="btn btn--ghost" aria-label="Previous month">◀</button>
-        <div>
-          <div class="calendar__title">Calendar</div>
-          <div id="calendar-month" class="calendar__month"></div>
+    <main class="main-content">
+      <header class="topbar"><div><p class="eyebrow">Thursday, August 20, 2026</p><h1>Good morning. Make the important thing easy.</h1><p class="subtitle">Your week, distilled into the next useful actions.</p></div><button id="report-button" class="button button--outline">Generate daily report</button></header>
+      <section class="stats-row"><div class="stat"><span class="stat__label">Today’s focus</span><strong id="capacity-value">8.0h available today</strong><span class="stat__hint">after fixed commitments</span></div><div class="stat"><span class="stat__label">Current view</span><strong id="task-count">0 tasks</strong><span class="stat__hint">sorted by priority</span></div><div class="stat stat--accent"><span class="stat__label">Operating rule</span><strong>Protect deep work</strong><span class="stat__hint">move lower priority when full</span></div></section>
+
+      <section class="workspace-grid">
+        <div class="task-column">
+          <div class="section-heading"><div><p class="eyebrow">Master task list</p><h2 id="list-title">This Week</h2></div><button id="today-button" class="button button--quiet">Today</button></div>
+          <div class="filters"><input id="task-search" class="filter-input" placeholder="Search tasks..." aria-label="Search tasks" /><select id="project-filter" class="filter-select"><option value="">All projects</option></select><select id="priority-filter" class="filter-select"><option value="">Priority</option><option>P0</option><option>P1</option><option>P2</option><option>P3</option></select><select id="status-filter" class="filter-select"><option value="">Status</option><option>TODO</option><option>Doing</option><option>Waiting</option><option>Delegated</option><option>Review</option><option>Done</option></select></div>
+          <div id="task-list" class="task-list"></div>
         </div>
-        <button id="next-month" class="btn btn--ghost" aria-label="Next month">▶</button>
-      </div>
+        <aside class="planning-column">
+          <section class="panel calendar-panel"><div class="panel-heading"><h2>Planning calendar</h2><div><button id="prev-month" class="calendar-nav" aria-label="Previous month">‹</button><span id="calendar-month"></span><button id="next-month" class="calendar-nav" aria-label="Next month">›</button></div></div><div class="calendar-split" role="group" aria-label="Calendar task type"><button class="calendar-split__button active" data-calendar-filter="all">All</button><button class="calendar-split__button" data-calendar-filter="meeting">Meetings</button><button class="calendar-split__button" data-calendar-filter="self">Self tasks</button></div><div id="calendar-load" class="calendar-load"></div><div class="weekday-row"><span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span></div><div id="calendar-grid" class="calendar-grid"></div></section>
+          <section class="panel report-panel"><div class="panel-heading"><h2>Report draft</h2><span class="live-label">LIVE</span></div><pre id="report-output">Click “Generate daily report” when you are ready to brief your manager.</pre></section>
+          <section id="member-panel" class="panel member-panel hidden"><div class="panel-heading"><h2 id="member-panel-title">Collaborator</h2><button id="member-panel-close" class="icon-button" title="Close collaborator details">×</button></div><div id="member-panel-content"></div></section>
+        </aside>
+      </section>
 
-      <div class="calendar__weekdays">
-        <div>Sun</div>
-        <div>Mon</div>
-        <div>Tue</div>
-        <div>Wed</div>
-        <div>Thu</div>
-        <div>Fri</div>
-        <div>Sat</div>
-      </div>
-
-      <div id="calendar-grid" class="calendar__grid"></div>
-    </section>
-
-    <section class="composer">
-      <div class="composer__field">
-        <label for="note-title">Title (optional)</label>
-        <input id="note-title" class="composer__text-input" placeholder="Title" />
-      </div>
-
-      <div class="composer__field">
-        <label for="note-input">Note</label>
-        <textarea id="note-input" class="composer__input" placeholder="Write a note..."></textarea>
-      </div>
-
-      <div class="composer__field composer__field--date">
-        <label for="note-date">Date</label>
-        <div class="composer__date-row">
-          <input id="note-date" type="date" class="composer__date" />
-          <button id="yesterday-btn" type="button" class="btn btn--ghost btn--small">Yesterday</button>
-        </div>
-      </div>
-
-      <button id="add-btn" class="btn btn--add">Add</button>
-    </section>
-
-    <ul id="note-list" class="note-list"></ul>
-  </main>
-
+      <section class="composer-section"><div class="section-heading"><div><p class="eyebrow">Capture once, execute clearly</p><h2>Add a task</h2></div><span class="form-note">Required: title and outcome</span></div>
+        <form id="task-form" class="task-form">
+          <div class="form-field form-field--wide"><label for="task-title">Task / outcome</label><input id="task-title" required placeholder="What needs to move forward?" /></div>
+          <div class="form-field form-field--wide"><label for="task-outcome">Success looks like</label><input id="task-outcome" placeholder="The concrete result" /></div>
+          <div class="form-field"><label for="task-priority">Priority</label><select id="task-priority"><option>P0</option><option selected>P1</option><option>P2</option><option>P3</option></select></div>
+          <div class="form-field"><label for="task-status">Status</label><select id="task-status"><option>TODO</option><option>Doing</option><option>Waiting</option><option>Delegated</option><option>Review</option><option>Done</option></select></div>
+          <div class="form-field"><label for="task-due">Due</label><input id="task-due" type="date" required /></div>
+          <div class="form-field"><label for="task-estimate">Estimate (hours)</label><input id="task-estimate" type="number" min="0.25" step="0.25" value="1" /></div>
+          <div class="form-field"><label for="task-owner">Owner</label><select id="task-owner"><option value="">You</option></select></div>
+          <div class="form-field"><label for="task-follow-up">Follow-up</label><input id="task-follow-up" type="date" /></div>
+          <div class="form-field form-field--wide"><label for="task-next">Next action</label><input id="task-next" placeholder="The very next physical action" /></div>
+          <div class="form-field form-field--wide"><label for="task-dependency">Dependency / blocker</label><input id="task-dependency" placeholder="Person, decision, or input needed" /></div>
+          <button class="button button--primary" type="submit">Add task <span>↗</span></button>
+        </form>
+      </section>
+    </main>
+  </div>
   <script src="script.js"></script>
 </body>
 </html>
