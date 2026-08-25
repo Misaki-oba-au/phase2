@@ -1,7 +1,16 @@
-/**
- * Sales Data Module
- * Handles Excel file upload, parsing, and sales data visualization
- */
+/** Sales Data upload and presentation module. */
+
+import { parseSalesWorkbook } from './sales-excel-parser.js';
+
+export function calculateTotalSales(stores) {
+  return stores.reduce((total, store) => total + store.monthlyTotalSales, 0);
+}
+
+export function rankStores(stores) {
+  return [...stores].sort((a, b) =>
+    b.monthlyTotalSales - a.monthlyTotalSales || a.storeName.localeCompare(b.storeName)
+  );
+}
 
 export class SalesDataModule {
   constructor() {
@@ -11,288 +20,190 @@ export class SalesDataModule {
     this.rankingSection = document.getElementById('ranking-section');
     this.salesTableSection = document.getElementById('sales-table-section');
     this.salesContent = document.getElementById('sales-content');
+    this.warningSection = document.getElementById('sales-warning-section');
+    this.errorSection = document.getElementById('sales-error-section');
+    this.result = null;
 
-    this.salesData = [];
-    this.setupEventListeners();
-  }
-
-  /**
-   * Setup event listeners
-   */
-  setupEventListeners() {
     this.uploadBtn.addEventListener('click', () => this.handleFileUpload());
-    this.fileInput.addEventListener('change', () => {
-      // Optional: auto-upload on file selection
-    });
   }
 
-  /**
-   * Handle file upload
-   */
   async handleFileUpload() {
     const file = this.fileInput.files[0];
     if (!file) {
-      alert('Please select a file');
+      this.displayError('Please select a file.');
       return;
     }
 
+    this.clearMessages();
+    this.setLoading(true);
     try {
-      this.uploadBtn.textContent = 'Uploading...';
-      this.uploadBtn.disabled = true;
-
-      const data = await this.parseExcelFile(file);
-      this.validateData(data);
-      this.salesData = data;
-
-      // Display results
-      this.displaySummary();
-      this.displayRanking();
-      this.displayTable();
-
-      // Show sections
-      this.salesSummarySection.classList.remove('hidden');
-      this.rankingSection.classList.remove('hidden');
-      this.salesTableSection.classList.remove('hidden');
+      const input = await file.arrayBuffer();
+      this.result = parseSalesWorkbook(input, file.name);
+      this.displayResult();
     } catch (error) {
       console.error('Error processing file:', error);
-      alert(`Error: ${error.message}`);
+      this.hideResults();
+      this.displayError(`Failed to process the Excel file: ${error.message}`);
     } finally {
-      this.uploadBtn.textContent = 'Upload';
-      this.uploadBtn.disabled = false;
+      this.setLoading(false);
     }
   }
 
-  /**
-   * Parse Excel file using SheetJS
-   */
-  async parseExcelFile(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-
-      reader.onload = (e) => {
-        try {
-          const data = e.target.result;
-          const workbook = XLSX.read(data, { type: 'array' });
-
-          // Get first sheet
-          const sheetName = workbook.SheetNames[0];
-          const worksheet = workbook.Sheets[sheetName];
-
-          // Convert to JSON
-          const jsonData = XLSX.utils.sheet_to_json(worksheet);
-
-          if (jsonData.length === 0) {
-            throw new Error('No data found in the spreadsheet');
-          }
-
-          resolve(jsonData);
-        } catch (error) {
-          reject(new Error(`Failed to parse Excel file: ${error.message}`));
-        }
-      };
-
-      reader.onerror = () => {
-        reject(new Error('Failed to read file'));
-      };
-
-      reader.readAsArrayBuffer(file);
-    });
+  displayResult() {
+    this.displaySummary();
+    this.displayWarnings();
+    this.displayRanking();
+    this.displayTable();
+    this.salesSummarySection.classList.remove('hidden');
+    this.rankingSection.classList.remove('hidden');
+    this.salesTableSection.classList.remove('hidden');
   }
 
-  /**
-   * Validate data structure
-   */
-  validateData(data) {
-    // Expected columns (case-insensitive)
-    const requiredFields = [
-      'Store ID',
-      'Store Name',
-      'Target Sales',
-      'Actual Sales',
-      'Achievement Rate (%)',
-    ];
-
-    if (data.length === 0) {
-      throw new Error('No data rows found');
-    }
-
-    // Check if required fields exist
-    const firstRow = data[0];
-    const headers = Object.keys(firstRow);
-
-    for (const field of requiredFields) {
-      const fieldExists = headers.some(
-        (h) => h.trim().toLowerCase() === field.toLowerCase()
-      );
-      if (!fieldExists) {
-        throw new Error(`Missing required column: "${field}"`);
-      }
-    }
-  }
-
-  /**
-   * Get column name (case-insensitive)
-   */
-  getColumn(row, columnName) {
-    const key = Object.keys(row).find(
-      (k) => k.trim().toLowerCase() === columnName.toLowerCase()
-    );
-    return key ? row[key] : null;
-  }
-
-  /**
-   * Parse numeric value
-   */
-  parseNumber(value) {
-    if (typeof value === 'number') return value;
-    if (typeof value === 'string') {
-      const cleaned = value.replace(/[^0-9.-]/g, '');
-      return parseFloat(cleaned) || 0;
-    }
-    return 0;
-  }
-
-  /**
-   * Display sales summary (Total Sales, Target Achievement %)
-   */
   displaySummary() {
-    const totalSales = this.salesData.reduce((sum, row) => {
-      const actual = this.parseNumber(this.getColumn(row, 'Actual Sales'));
-      return sum + actual;
-    }, 0);
-
-    const totalTarget = this.salesData.reduce((sum, row) => {
-      const target = this.parseNumber(this.getColumn(row, 'Target Sales'));
-      return sum + target;
-    }, 0);
-
-    const achievementRate =
-      totalTarget > 0 ? ((totalSales / totalTarget) * 100).toFixed(1) : 0;
-
     document.getElementById('total-sales').textContent = this.formatCurrency(
-      totalSales
+      calculateTotalSales(this.result.stores)
     );
-    document.getElementById('target-achievement').textContent =
-      `${achievementRate}%`;
+    document.getElementById('sales-period').textContent = this.result.workbookPeriod;
+    document.getElementById('sales-currency').textContent = this.result.currency;
   }
 
-  /**
-   * Display store ranking
-   */
-  displayRanking() {
-    // Sort by actual sales descending
-    const sorted = [...this.salesData].sort((a, b) => {
-      const salesA = this.parseNumber(this.getColumn(a, 'Actual Sales'));
-      const salesB = this.parseNumber(this.getColumn(b, 'Actual Sales'));
-      return salesB - salesA;
-    });
-
-    // Display top 5 or all if less than 5
-    const topStores = sorted.slice(0, 5);
-
-    const rankingHtml = topStores
-      .map((row, index) => {
-        const storeName = this.getColumn(row, 'Store Name');
-        const sales = this.parseNumber(this.getColumn(row, 'Actual Sales'));
-        const achievement = this.parseNumber(
-          this.getColumn(row, 'Achievement Rate (%)')
-        );
-
-        let badgeClass = '';
-        if (index === 0) badgeClass = 'gold';
-        else if (index === 1) badgeClass = 'silver';
-        else if (index === 2) badgeClass = 'bronze';
-
-        return `
-          <div class="ranking-card">
-            <div class="ranking-badge ${badgeClass}">${index + 1}</div>
-            <p class="ranking-store-name">${storeName}</p>
-            <p class="ranking-store-sales">${this.formatCurrency(sales)}</p>
-            <p class="ranking-store-achievement">Achievement: ${achievement.toFixed(1)}%</p>
-          </div>
-        `;
-      })
-      .join('');
-
-    document.getElementById('ranking-list').innerHTML = rankingHtml;
-  }
-
-  /**
-   * Display sales table
-   */
-  displayTable() {
-    if (this.salesData.length === 0) {
-      this.salesContent.innerHTML = '<div class="empty-state">No data to display</div>';
+  displayWarnings() {
+    const warnings = [
+      ...this.result.warnings,
+      ...this.result.stores.flatMap((store) => store.warnings),
+    ];
+    this.warningSection.replaceChildren();
+    if (warnings.length === 0) {
+      this.warningSection.classList.add('hidden');
       return;
     }
 
-    // Get all headers from first row
-    const headers = Object.keys(this.salesData[0]);
-
-    // Create table
-    let html = '<table class="sales-table"><thead><tr>';
-
-    headers.forEach((header) => {
-      html += `<th>${header}</th>`;
-    });
-    html += '</tr></thead><tbody>';
-
-    // Add data rows
-    this.salesData.forEach((row) => {
-      html += '<tr>';
-      headers.forEach((header) => {
-        let value = this.getColumn(row, header);
-
-        // Format numeric values
-        if (header.toLowerCase().includes('sales')) {
-          const num = this.parseNumber(value);
-          value = this.formatCurrency(num);
-        } else if (header.toLowerCase().includes('achievement') || header.toLowerCase().includes('rate')) {
-          const num = this.parseNumber(value);
-          value = `${num.toFixed(1)}%`;
-        }
-
-        const isNumeric = header.toLowerCase().includes('sales') || 
-                         header.toLowerCase().includes('achievement') || 
-                         header.toLowerCase().includes('rate');
-        const className = isNumeric ? 'numeric' : '';
-
-        html += `<td class="${className}">${value || '-'}</td>`;
-      });
-      html += '</tr>';
-    });
-
-    html += '</tbody></table>';
-    this.salesContent.innerHTML = html;
+    const title = document.createElement('h2');
+    title.textContent = `Warnings (${warnings.length})`;
+    const list = document.createElement('ul');
+    for (const warning of warnings) {
+      const item = document.createElement('li');
+      item.textContent = this.formatWarning(warning);
+      list.appendChild(item);
+    }
+    this.warningSection.append(title, list);
+    this.warningSection.classList.remove('hidden');
   }
 
-  /**
-   * Format currency
-   */
+  formatWarning(warning) {
+    if (warning.code === 'out-of-period-date') {
+      return `${warning.sheetName}: excluded ${warning.excludedRowCount} row(s) from ${warning.detectedPeriod}; expected ${warning.expectedPeriod}.`;
+    }
+    if (warning.code === 'duplicate-store-code') {
+      return `Store code ${warning.storeCode} is duplicated in: ${warning.sheets.join(', ')}.`;
+    }
+    if (warning.code === 'missing-cached-formula-value') {
+      return `${warning.sheetName}: formula result is unavailable at row ${warning.row} (${warning.field}).`;
+    }
+    return `${warning.sheetName ? `${warning.sheetName}: ` : ''}${warning.code}`;
+  }
+
+  displayRanking() {
+    const list = document.getElementById('ranking-list');
+    list.replaceChildren();
+    rankStores(this.result.stores).forEach((store, index) => {
+      const card = document.createElement('div');
+      card.className = 'ranking-card';
+
+      const badge = document.createElement('div');
+      badge.className = `ranking-badge${this.getMedalClass(index)}`;
+      badge.textContent = String(index + 1);
+
+      const name = document.createElement('p');
+      name.className = 'ranking-store-name';
+      name.textContent = store.storeName;
+
+      const sales = document.createElement('p');
+      sales.className = 'ranking-store-sales';
+      sales.textContent = this.formatCurrency(store.monthlyTotalSales);
+
+      const code = document.createElement('p');
+      code.className = 'ranking-store-code';
+      code.textContent = `Store Code: ${store.storeCode || 'N/A'}`;
+      card.append(badge, name, sales, code);
+      list.appendChild(card);
+    });
+  }
+
+  displayTable() {
+    const table = document.createElement('table');
+    table.className = 'sales-table';
+    const headerRow = document.createElement('tr');
+    ['Store Name', 'Store Code', 'Monthly Total Sales'].forEach((label) => {
+      const header = document.createElement('th');
+      header.textContent = label;
+      headerRow.appendChild(header);
+    });
+    const head = document.createElement('thead');
+    head.appendChild(headerRow);
+
+    const body = document.createElement('tbody');
+    rankStores(this.result.stores).forEach((store) => {
+      const row = document.createElement('tr');
+      row.append(
+        this.createCell(store.storeName),
+        this.createCell(store.storeCode || 'N/A'),
+        this.createCell(this.formatCurrency(store.monthlyTotalSales), 'numeric')
+      );
+      body.appendChild(row);
+    });
+    table.append(head, body);
+    this.salesContent.replaceChildren(table);
+  }
+
+  createCell(value, className = '') {
+    const cell = document.createElement('td');
+    cell.className = className;
+    cell.textContent = value;
+    return cell;
+  }
+
+  getMedalClass(index) {
+    if (index === 0) return ' gold';
+    if (index === 1) return ' silver';
+    if (index === 2) return ' bronze';
+    return '';
+  }
+
   formatCurrency(value) {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'THB',
+      currencyDisplay: 'code',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(value);
   }
+
+  displayError(message) {
+    this.errorSection.textContent = message;
+    this.errorSection.classList.remove('hidden');
+  }
+
+  clearMessages() {
+    this.errorSection.textContent = '';
+    this.errorSection.classList.add('hidden');
+    this.warningSection.replaceChildren();
+    this.warningSection.classList.add('hidden');
+  }
+
+  hideResults() {
+    this.salesSummarySection.classList.add('hidden');
+    this.rankingSection.classList.add('hidden');
+    this.salesTableSection.classList.add('hidden');
+  }
+
+  setLoading(isLoading) {
+    this.uploadBtn.textContent = isLoading ? 'Processing...' : 'Upload';
+    this.uploadBtn.disabled = isLoading;
+  }
 }
 
-/**
- * Initialize Sales Data Module
- */
 export function initSalesData() {
   return new SalesDataModule();
 }
-
-// Initialize when this module is imported
-let salesModule = null;
-
-document.addEventListener('DOMContentLoaded', () => {
-  // Check if we're on the sales data tab
-  const salesDataTab = document.getElementById('sales-data-tab');
-  if (salesDataTab) {
-    salesModule = initSalesData();
-  }
-});

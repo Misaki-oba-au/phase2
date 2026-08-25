@@ -125,6 +125,9 @@
           </div>
         </section>
 
+        <section id="sales-error-section" class="error-message hidden" role="alert"></section>
+        <section id="sales-warning-section" class="warning-message hidden" aria-live="polite"></section>
+
         <!-- Sales Summary Section -->
         <section id="sales-summary-section" class="sales-summary-section hidden">
           <div class="summary-grid">
@@ -133,8 +136,12 @@
               <p id="total-sales" class="summary-value">-</p>
             </div>
             <div class="summary-card">
-              <p class="summary-label">Target Achievement %</p>
-              <p id="target-achievement" class="summary-value">-</p>
+              <p class="summary-label">Period</p>
+              <p id="sales-period" class="summary-value summary-value--text">-</p>
+            </div>
+            <div class="summary-card">
+              <p class="summary-label">Currency</p>
+              <p id="sales-currency" class="summary-value summary-value--text">THB</p>
             </div>
           </div>
         </section>
@@ -147,7 +154,7 @@
 
         <!-- Sales Table Section -->
         <section id="sales-table-section" class="sales-table-section hidden">
-          <h2>Store-level Sales Table</h2>
+          <h2>Store-level Sales</h2>
           <div id="sales-content" class="sales-content"></div>
         </section>
       </main>

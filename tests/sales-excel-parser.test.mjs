@@ -9,6 +9,7 @@ import {
   getCachedNumericValue,
   parseSalesWorkbookData,
 } from '../js/modules/sales-excel-parser.js';
+import { calculateTotalSales, rankStores } from '../js/modules/sales-data.js';
 
 const excelFile = readdirSync(new URL('../data/', import.meta.url))
   .find((name) => name.endsWith('.xlsx'));
@@ -80,4 +81,24 @@ test('warns about duplicate store codes without dropping either store', () => {
     storeCode: '00008',
     sheets: ['Icon Siam', 'Central Westgate'],
   }]);
+});
+
+test('calculates dashboard total and ranks every store by monthly sales', () => {
+  assert.equal(calculateTotalSales(result.stores), 40245450);
+  assert.deepEqual(
+    rankStores(result.stores).map((store) => [store.storeName, store.monthlyTotalSales]),
+    [
+      ['Icon Siam', 11490700],
+      ['Central World', 8066500],
+      ['Central Phuket', 5020550],
+      ['Terminal 21 Asoke', 4342990],
+      ['Central Pattaya', 3028850],
+      ['Mega Bangna', 2981560],
+      ['Central Ladprao', 2734400],
+      ['Terminal 21 Pattaya', 2579900],
+      ['Central park', 0],
+      ['Central Westgate', 0],
+      ['Fashion Island', 0],
+    ]
+  );
 });

@@ -91,6 +91,10 @@
   font-weight: 700;
 }
 
+.summary-value--text {
+  font-size: 1.5rem;
+}
+
 /* Ranking Section */
 .ranking-section {
   margin: 2rem;
@@ -168,6 +172,12 @@
 .ranking-store-achievement {
   font-size: 0.9rem;
   color: #666;
+  margin: 0;
+}
+
+.ranking-store-code {
+  font-size: 0.85rem;
+  color: #777;
   margin: 0;
 }
 
@@ -255,6 +265,30 @@
   border-radius: 4px;
   margin: 2rem;
   border-left: 4px solid #c62828;
+}
+
+.error-message.hidden,
+.warning-message.hidden {
+  display: none;
+}
+
+.warning-message {
+  background-color: #fff8e1;
+  color: #6d4c00;
+  padding: 1rem 1.25rem;
+  border-radius: 4px;
+  margin: 2rem;
+  border-left: 4px solid #ffb300;
+}
+
+.warning-message h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.1rem;
+}
+
+.warning-message ul {
+  margin: 0;
+  padding-left: 1.25rem;
 }
 
 .empty-state {
