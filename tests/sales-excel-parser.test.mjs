@@ -5,6 +5,7 @@ import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 
 import {
+  detectWorkbookPeriod,
   findSaleTotalColumns,
   getCachedNumericValue,
   parseSalesWorkbookData,
@@ -20,6 +21,40 @@ const workbook = JSON.parse(execFileSync(
   { encoding: 'utf8', maxBuffer: 20 * 1024 * 1024 }
 ));
 const result = parseSalesWorkbookData(workbook, excelFile);
+const sheets = workbook.SheetNames.map((sheetName) => ({
+  sheetName,
+  worksheet: workbook.Sheets[sheetName],
+}));
+
+test('prioritizes abbreviated or full English month names in filenames', () => {
+  assert.deepEqual(
+    detectWorkbookPeriod(
+      '08 .แบบฟอร์มรายงานยอดขาย ร้าน Onitsuka 09 สาขา Aug 2026.xlsx',
+      sheets,
+      workbook
+    ),
+    { year: 2026, month: 8 }
+  );
+  assert.deepEqual(
+    detectWorkbookPeriod('09-2026 report July 2026.xlsx', sheets, workbook),
+    { year: 2026, month: 7 }
+  );
+  assert.deepEqual(
+    detectWorkbookPeriod('03_March 2026 sales.xlsx', sheets, workbook),
+    { year: 2026, month: 3 }
+  );
+});
+
+test('uses only adjacent numeric year/month pairs before falling back to sale dates', () => {
+  assert.deepEqual(
+    detectWorkbookPeriod('sales 2026-07.xlsx', sheets, workbook),
+    { year: 2026, month: 7 }
+  );
+  assert.deepEqual(
+    detectWorkbookPeriod('09 สาขา sales report 2026.xlsx', sheets, workbook),
+    { year: 2026, month: 3 }
+  );
+});
 
 test('parses every non-empty store sheet and detects March 2026', () => {
   assert.equal(result.workbookPeriod, '2026-03');

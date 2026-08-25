@@ -5,10 +5,12 @@
  * workbook into a small, predictable data model that the dashboard can consume.
  */
 
-const MONTH_NAMES = new Map([
-  ['january', 1], ['february', 2], ['march', 3], ['april', 4],
-  ['may', 5], ['june', 6], ['july', 7], ['august', 8],
-  ['september', 9], ['october', 10], ['november', 11], ['december', 12],
+const ENGLISH_MONTH_PATTERN =
+  /\b(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\b[^0-9]*(20\d{2})\b/i;
+
+const MONTH_BY_NAME = new Map([
+  ['jan', 1], ['feb', 2], ['mar', 3], ['apr', 4], ['may', 5], ['jun', 6],
+  ['jul', 7], ['aug', 8], ['sep', 9], ['oct', 10], ['nov', 11], ['dec', 12],
 ]);
 
 const HEADER_SCAN_ROW_LIMIT = 20;
@@ -74,14 +76,28 @@ export function isEmptySheet(worksheet) {
 
 export function detectWorkbookPeriod(fileName, sheets, workbook = {}) {
   const normalizedName = String(fileName).normalize('NFKC').toLowerCase();
-  for (const [monthName, month] of MONTH_NAMES) {
-    const match = normalizedName.match(new RegExp(`(?:^|[^a-z])${monthName}[^0-9]*(20\\d{2})`));
-    if (match) return { year: Number(match[1]), month };
+  const englishMonthMatch = normalizedName.match(ENGLISH_MONTH_PATTERN);
+  if (englishMonthMatch) {
+    return {
+      year: Number(englishMonthMatch[2]),
+      month: MONTH_BY_NAME.get(englishMonthMatch[1].slice(0, 3)),
+    };
   }
 
-  const numericMatch = normalizedName.match(/(?:^|\D)(0?[1-9]|1[0-2])[^0-9]+(20\d{2})(?:\D|$)/);
-  if (numericMatch) {
-    return { year: Number(numericMatch[2]), month: Number(numericMatch[1]) };
+  // Only accept an adjacent numeric year/month pair. Text between a number and
+  // a year (for example "09 สาขา ... 2026") means that number is not a month.
+  const yearFirstMatch = normalizedName.match(
+    /(?:^|[^0-9])(20\d{2})[\s._/-]+(0?[1-9]|1[0-2])(?:[^0-9]|$)/
+  );
+  if (yearFirstMatch) {
+    return { year: Number(yearFirstMatch[1]), month: Number(yearFirstMatch[2]) };
+  }
+
+  const monthFirstMatch = normalizedName.match(
+    /(?:^|[^0-9])(0?[1-9]|1[0-2])[\s._/-]+(20\d{2})(?:[^0-9]|$)/
+  );
+  if (monthFirstMatch) {
+    return { year: Number(monthFirstMatch[2]), month: Number(monthFirstMatch[1]) };
   }
 
   const periodCounts = new Map();
